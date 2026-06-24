@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CORELINE DESIGNS — Creative Studio, Nairobi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #F4F5F9;
+    --bg2:     #ECEEF5;
+    --bg3:     #E2E4EE;
+    --ink:     #16151C;
+    --ink2:    #2C2A38;
+    --muted:   #888699;
+    --accent:  #2B2BE8;
+    --red:     #FF3B30;
+    --gold:    #D4A843;
+    --line:    rgba(22,21,28,0.09);
+    --linv:    rgba(255,255,255,0.1);
+    --font-d:  'Syne', sans-serif;
+    --font-b:  'Outfit', sans-serif;
+    --font-m:  'DM Mono', monospace;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:var(--font-b);font-size:16px;line-height:1.6;overflow-x:hidden;cursor:none}
+
+  /* CURSOR */
+  #cursor{width:10px;height:10px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .25s,height .25s}
+  #cursor-ring{width:34px;height:34px;border:1.5px solid rgba(43,43,232,.35);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .18s ease-out}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1.4rem 4rem;transition:background .4s,border-color .4s,backdrop-filter .4s;border-bottom:1px solid transparent}
+  nav.scrolled{background:rgba(244,245,249,.92);border-color:var(--line);backdrop-filter:blur(18px)}
+  .nav-logo{font-family:var(--font-d);font-weight:800;font-size:1.1rem;letter-spacing:.12em;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:.3rem}
+  .nav-logo .dot{color:var(--accent);font-size:1.4rem;line-height:1}
+  .nav-links{display:flex;gap:2.5rem;list-style:none}
+  .nav-links a{font-family:var(--font-m);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;position:relative;transition:color .2s}
+  .nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1.5px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .28s}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-links a:hover::after{transform:scaleX(1)}
+  .nav-cta{font-family:var(--font-m);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:var(--bg);padding:.65rem 1.5rem;text-decoration:none;transition:background .2s}
+  .nav-cta:hover{background:var(--accent)}
+
+  /* HERO */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:0 4rem;overflow:hidden;background:var(--bg)}
+  .hero-content{position:relative;z-index:2;max-width:560px}
+  .hero-tag{font-family:var(--font-m);font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:1.6rem;display:flex;align-items:center;gap:.9rem}
+  .hero-tag::before{content:'';width:36px;height:1px;background:var(--accent);display:block}
+  h1{font-family:var(--font-d);font-size:clamp(3rem,7vw,6.4rem);font-weight:800;line-height:.95;letter-spacing:-.03em;color:var(--ink);margin-bottom:2rem}
+  h1 em{font-style:normal;color:transparent;-webkit-text-stroke:1.5px rgba(22,21,28,.28)}
+  .hero-sub{font-size:1rem;font-weight:300;color:var(--muted);max-width:420px;margin-bottom:3rem;line-height:1.85}
+  .hero-actions{display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap}
+  .btn-primary{font-family:var(--font-m);font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;background:var(--ink);color:var(--bg);padding:1rem 2.2rem;text-decoration:none;transition:background .2s,transform .2s;display:inline-block}
+  .btn-primary:hover{background:var(--accent);transform:translateY(-2px)}
+  .btn-outline{font-family:var(--font-m);font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;border:1.5px solid var(--ink);color:var(--ink);padding:1rem 2.2rem;text-decoration:none;transition:background .2s,color .2s,transform .2s;display:inline-block}
+  .btn-outline:hover{background:var(--ink);color:var(--bg);transform:translateY(-2px)}
+  .scroll-hint{position:absolute;bottom:2.5rem;left:4rem;font-family:var(--font-m);font-size:.65rem;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;display:flex;align-items:center;gap:.8rem;z-index:2}
+  .scroll-line{width:1px;height:52px;background:linear-gradient(to bottom,var(--muted),transparent);animation:scrollPulse 2.2s ease-in-out infinite}
+  @keyframes scrollPulse{0%,100%{opacity:.3;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.08)}}
+
+
+  /* MARQUEE */
+  .marquee-section{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:1rem 0;overflow:hidden;background:var(--ink)}
+  .marquee-track{display:flex;gap:4rem;animation:marquee 28s linear infinite;width:max-content}
+  .marquee-item{font-family:var(--font-m);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,245,249,.4);white-space:nowrap;display:flex;align-items:center;gap:4rem}
+  .marquee-item::after{content:'◆';font-size:.45rem;color:var(--accent)}
+  @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* SECTIONS */
+  section{padding:7rem 4rem}
+  .section-label{font-family:var(--font-m);font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--accent);margin-bottom:.9rem;display:flex;align-items:center;gap:.7rem}
+  .section-label::before{content:'';width:22px;height:1.5px;background:var(--accent)}
+  h2{font-family:var(--font-d);font-size:clamp(1.9rem,4vw,3.2rem);font-weight:700;line-height:1.06;letter-spacing:-.02em;color:var(--ink);margin-bottom:1.4rem}
+
+  /* SERVICES */
+  .services{background:var(--bg2)}
+  .services-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3.5rem;flex-wrap:wrap;gap:2rem}
+  .services-header p{color:var(--muted);max-width:360px;font-weight:300;font-size:.95rem}
+  .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  .service-card{background:var(--bg2);padding:2.4rem;position:relative;overflow:hidden;transition:background .28s;cursor:default}
+  .service-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .35s ease}
+  .service-card:hover{background:#fff}
+  .service-card:hover::after{transform:scaleX(1)}
+  .service-number{font-family:var(--font-m);font-size:.62rem;color:var(--muted);letter-spacing:.15em;margin-bottom:1.6rem}
+  .service-icon{width:42px;height:42px;margin-bottom:1.3rem;opacity:.6;transition:opacity .3s}
+  .service-card:hover .service-icon{opacity:1}
+  .service-card h3{font-family:var(--font-d);font-size:1.2rem;font-weight:600;margin-bottom:.7rem;color:var(--ink)}
+  .service-card p{font-size:.88rem;color:var(--muted);line-height:1.78;font-weight:300}
+  .service-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1.4rem}
+  .tag{font-family:var(--font-m);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.28rem .65rem;border:1px solid var(--line);color:var(--muted);transition:border-color .2s,color .2s}
+  .service-card:hover .tag{border-color:rgba(43,43,232,.25);color:var(--accent)}
+
+  /* WORK */
+  .work-section{background:var(--bg)}
+  .work-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:1.5rem;margin-top:3.5rem}
+  .work-card{background:var(--bg2);border:1px solid var(--line);overflow:hidden;transition:transform .32s cubic-bezier(.25,.46,.45,.94),box-shadow .32s}
+  .work-card:hover{transform:translateY(-5px);box-shadow:0 20px 60px rgba(22,21,28,.09)}
+  .wc1{grid-column:span 7}.wc2{grid-column:span 5}.wc3{grid-column:span 5}.wc4{grid-column:span 7}
+  .work-visual{position:relative;overflow:hidden}
+  .wc1 .work-visual,.wc4 .work-visual{aspect-ratio:16/8}
+  .wc2 .work-visual,.wc3 .work-visual{aspect-ratio:4/3}
+  .work-visual svg{display:block;width:100%;height:100%}
+  .work-overlay{position:absolute;inset:0;background:rgba(22,21,28,.78);opacity:0;transition:opacity .3s;display:flex;align-items:center;justify-content:center}
+  .work-card:hover .work-overlay{opacity:1}
+  .work-overlay-text{font-family:var(--font-m);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--bg);border:1px solid rgba(244,245,249,.45);padding:.7rem 1.4rem}
+  .work-info{padding:1.3rem 1.5rem}
+  .work-cat{font-family:var(--font-m);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem}
+  .work-info h3{font-family:var(--font-d);font-size:1.05rem;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
+
+  /* STATS */
+  .stats-section{background:var(--ink);padding:0}
+  .stats-inner{display:flex;flex-wrap:wrap}
+  .stat-item{flex:1;min-width:200px;padding:3.5rem 3rem;border-right:1px solid var(--linv)}
+  .stat-item:last-child{border-right:none}
+  .stat-num{font-family:var(--font-d);font-size:clamp(2.8rem,5vw,5rem);font-weight:800;line-height:1;letter-spacing:-.04em;color:var(--bg);margin-bottom:.4rem}
+  .stat-num span{color:var(--accent)}
+  .stat-label{font-family:var(--font-m);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(244,245,249,.38)}
+
+  /* PROCESS BANNER */
+  .process-section{background:var(--accent);position:relative;height:440px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  #float-canvas{position:absolute;inset:0;width:100%;height:100%}
+  .process-text{position:relative;z-index:2;text-align:center;pointer-events:none}
+  .process-text .section-label{justify-content:center;color:rgba(244,245,249,.65)}
+  .process-text .section-label::before{background:rgba(244,245,249,.65)}
+  .process-text h2{color:#fff;font-size:clamp(2rem,5vw,3.8rem)}
+  .process-text p{color:rgba(255,255,255,.6);margin-top:.9rem;font-size:.92rem;font-weight:300;letter-spacing:.06em}
+
+  /* CONTACT */
+  .contact-section{background:var(--bg2);display:flex;gap:6rem;align-items:flex-start;flex-wrap:wrap}
+  .contact-left,.contact-right{flex:1;min-width:280px}
+  .big-email{font-family:var(--font-d);font-size:clamp(1.2rem,2.8vw,1.9rem);font-weight:700;color:var(--accent);text-decoration:none;letter-spacing:-.01em;display:block;margin-top:2rem;border-bottom:1.5px solid rgba(43,43,232,.22);padding-bottom:1rem;transition:color .2s,border-color .2s}
+  .big-email:hover{color:var(--ink);border-color:var(--ink)}
+  .contact-details{margin-top:2rem;display:flex;flex-direction:column;gap:.8rem}
+  .contact-detail{display:flex;gap:1rem;font-size:.88rem;color:var(--muted)}
+  .contact-detail strong{color:var(--ink);font-weight:500;min-width:80px;font-family:var(--font-m);font-size:.7rem;letter-spacing:.08em}
+  .contact-right p{color:var(--muted);font-weight:300;font-size:.95rem;line-height:1.85;max-width:440px}
+
+  /* FOOTER */
+  footer{border-top:1px solid var(--line);padding:2rem 4rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;background:var(--bg)}
+  footer p{font-family:var(--font-m);font-size:.66rem;color:var(--muted);letter-spacing:.1em}
+  .footer-links{display:flex;gap:2rem;list-style:none}
+  .footer-links a{font-family:var(--font-m);font-size:.66rem;color:var(--muted);text-decoration:none;letter-spacing:.08em;transition:color .2s}
+  .footer-links a:hover{color:var(--accent)}
+
+
+  /* LIGHTBOX */
+  .lightbox{display:none;position:fixed;inset:0;z-index:1000;background:rgba(22,21,28,.88);backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:2rem}
+  .lightbox.open{display:flex}
+  .lightbox-inner{position:relative;max-width:900px;width:100%;background:#1a1924;border:1px solid rgba(255,255,255,.08);overflow:hidden}
+  .lightbox-inner svg{display:block;width:100%;height:auto}
+  .lightbox-close{position:absolute;top:1rem;right:1rem;width:36px;height:36px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:2;font-family:sans-serif;line-height:1}
+  .lightbox-close:hover{background:var(--accent)}
+  .lightbox-label{padding:1rem 1.4rem;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center}
+  .lightbox-label span{font-family:var(--font-m);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+  .lightbox-label strong{font-family:var(--font-d);font-size:.92rem;font-weight:600;color:#fff}
+  /* make overlay clickable */
+  .work-overlay{cursor:pointer}
+
+  /* REVEAL */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.visible{opacity:1;transform:none}
+  .rd1{transition-delay:.1s}.rd2{transition-delay:.2s}.rd3{transition-delay:.3s}
+
+  @media(max-width:900px){
+    nav{padding:1.2rem 1.5rem}
+    .nav-links{display:none}
+    section{padding:5rem 1.5rem}
+    .hero{padding:0 1.5rem}
+    .scroll-hint{left:1.5rem}
+    .wc1,.wc2,.wc3,.wc4{grid-column:span 12}
+    .stat-item{flex:1 1 50%}
+    footer{padding:1.5rem 1.5rem}
+    .contact-section{flex-direction:column;gap:3rem}
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">CORELINE<span class="dot">·</span>CO</a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Start a project</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="hero-tag">Coreline Designs Co. — Nairobi, Kenya</div>
+    <h1>Design at<br><em>The Core</em><br>of Your Brand.</h1>
+    <p class="hero-sub">We create stunning posters, flyers, banners, videos and websites for churches, events, and businesses across Kenya and beyond.</p>
+    <div class="hero-actions">
+      <a href="#work" class="btn-primary">See our work</a>
+      <a href="#contact" class="btn-outline">Get a quote</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item">Poster Design</span>
+    <span class="marquee-item">Flyer Design</span>
+    <span class="marquee-item">Banner Design</span>
+    <span class="marquee-item">Social Media</span>
+    <span class="marquee-item">Video Editing</span>
+    <span class="marquee-item">Web Design</span>
+    <span class="marquee-item">Church Media</span>
+    <span class="marquee-item">Event Branding</span>
+    <span class="marquee-item">Poster Design</span>
+    <span class="marquee-item">Flyer Design</span>
+    <span class="marquee-item">Banner Design</span>
+    <span class="marquee-item">Social Media</span>
+    <span class="marquee-item">Video Editing</span>
+    <span class="marquee-item">Web Design</span>
+    <span class="marquee-item">Church Media</span>
+    <span class="marquee-item">Event Branding</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="services-header">
+    <div>
+      <div class="section-label reveal">What we do</div>
+      <h2 class="reveal rd1">Everything your<br>brand needs.</h2>
+    </div>
+    <p class="reveal rd2">From a single flyer to a full digital presence — we handle every creative touchpoint so you don't have to.</p>
+  </div>
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <div class="service-number">01</div>
+      <svg class="service-icon" viewBox="0 0 44 44" fill="none">
+        <rect x="10" y="4" width="24" height="32" rx="2" stroke="#2B2BE8" stroke-width="1.4"/>
+        <line x1="15" y1="13" x2="29" y2="13" stroke="#2B2BE8" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="15" y1="19" x2="29" y2="19" stroke="#2B2BE8" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="15" y1="25" x2="22" y2="25" stroke="#2B2BE8" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      <h3>Poster &amp; Flyer Design</h3>
+      <p>Eye-catching posters and flyers for events, churches, promotions and campaigns — print-ready and social-optimised.</p>
+      <div class="service-tags"><span class="tag">Church Flyers</span><span class="tag">Event Posters</span><span class="tag">Promos</span></div>
+    </div>
+    <div class="service-card">
+      <div class="service-number">02</div>
+      <svg class="service-icon" viewBox="0 0 44 44" fill="none">
+        <rect x="4" y="8" width="36" height="24" rx="2" stroke="#2B2BE8" stroke-width="1.4"/>
+        <polygon points="18,14 30,20 18,26" fill="#2B2BE8" opacity=".7"/>
+        <line x1="10" y1="36" x2="34" y2="36" stroke="#2B2BE8" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      <h3>Video Editing</h3>
+      <p>Professional edits for reels, promos, event highlights, and church content — cut for impact and engagement.</p>
+      <div class="service-tags"><span class="tag">Reels &amp; Shorts</span><span class="tag">Event Videos</span><span class="tag">Church Media</span></div>
+    </div>
+    <div class="service-card">
+      <div class="service-number">03</div>
+      <svg class="service-icon" viewBox="0 0 44 44" fill="none">
+        <rect x="4" y="12" width="36" height="22" rx="2" stroke="#2B2BE8" stroke-width="1.4"/>
+        <line x1="4" y1="18" x2="40" y2="18" stroke="#2B2BE8" stroke-width="1.2"/>
+        <circle cx="9" cy="15" r="1.5" fill="#2B2BE8"/><circle cx="15" cy="15" r="1.5" fill="#2B2BE8"/>
+        <line x1="10" y1="26" x2="22" y2="26" stroke="#2B2BE8" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="10" y1="30" x2="18" y2="30" stroke="#2B2BE8" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      <h3>Web Design &amp; Development</h3>
+      <p>Fast, beautiful websites that represent your business online — from landing pages to full company sites.</p>
+      <div class="service-tags"><span class="tag">Landing Pages</span><span class="tag">Business Sites</span><span class="tag">Portfolios</span></div>
+    </div>
+    <div class="service-card">
+      <div class="service-number">04</div>
+      <svg class="service-icon" viewBox="0 0 44 44" fill="none">
+        <rect x="6" y="8" width="32" height="20" rx="2" stroke="#2B2BE8" stroke-width="1.4"/>
+        <circle cx="22" cy="18" r="5" stroke="#2B2BE8" stroke-width="1.2"/>
+        <line x1="6" y1="32" x2="38" y2="32" stroke="#2B2BE8" stroke-width="1" stroke-opacity=".4"/>
+        <circle cx="14" cy="36" r="2" stroke="#2B2BE8" stroke-width="1.2"/>
+        <circle cx="22" cy="36" r="2" stroke="#2B2BE8" stroke-width="1.2"/>
+        <circle cx="30" cy="36" r="2" stroke="#2B2BE8" stroke-width="1.2"/>
+      </svg>
+      <h3>Social Media Handling</h3>
+      <p>Consistent, on-brand content, graphics, and posting schedules across Instagram, Facebook, TikTok and more.</p>
+      <div class="service-tags"><span class="tag">Content Strategy</span><span class="tag">Graphics</span><span class="tag">Scheduling</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section class="work-section" id="work">
+  <div class="section-label reveal">Selected work</div>
+  <h2 class="reveal rd1">Designs that<br>speak volumes.</h2>
+  <div class="work-grid">
+
+    <!-- Church Sunday Poster -->
+    <div class="work-card wc1 reveal" data-title="Grace Covenant — Sunday Service" data-cat="Church Poster · Print &amp; Digital · 2024">
+      <div class="work-visual">
+        <svg viewBox="0 0 700 350" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="ch1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0b0825"/><stop offset="100%" stop-color="#1c0a40"/></linearGradient>
+            <radialGradient id="ch1g" cx="65%" cy="50%" r="45%"><stop offset="0%" stop-color="#ffe599" stop-opacity="0.3"/><stop offset="100%" stop-color="#ffe599" stop-opacity="0"/></radialGradient>
+          </defs>
+          <rect width="700" height="350" fill="url(#ch1)"/>
+          <rect width="700" height="350" fill="url(#ch1g)"/>
+          <rect x="528" y="55" width="12" height="190" rx="4" fill="#ffe599" opacity="0.2"/>
+          <rect x="478" y="112" width="112" height="12" rx="4" fill="#ffe599" opacity="0.2"/>
+          <g stroke="#ffe599" stroke-opacity="0.06" stroke-width="1"><line x1="534" y1="120" x2="380" y2="20"/><line x1="534" y1="120" x2="340" y2="90"/><line x1="534" y1="120" x2="360" y2="180"/><line x1="534" y1="120" x2="680" y2="20"/></g>
+          <rect x="48" y="50" width="3" height="68" fill="#ffe599" opacity="0.9"/>
+          <text x="64" y="76" font-family="'DM Mono',monospace" font-size="9" fill="#ffe599" letter-spacing="4" opacity="0.8">GRACE COVENANT CHURCH — NAIROBI</text>
+          <text x="48" y="158" font-family="'Syne',sans-serif" font-size="68" font-weight="800" fill="#ffffff" letter-spacing="-2">SUNDAY</text>
+          <text x="48" y="226" font-family="'Syne',sans-serif" font-size="68" font-weight="800" fill="#ffe599" letter-spacing="-2">SERVICE</text>
+          <text x="48" y="268" font-family="'Outfit',sans-serif" font-size="12" fill="#ffffff" opacity="0.4" font-style="italic">"Come as you are. Leave transformed."</text>
+          <rect x="48" y="282" width="260" height="1" fill="#ffe599" opacity="0.2"/>
+          <text x="48" y="308" font-family="'DM Mono',monospace" font-size="10" fill="#ffe599" opacity="0.75" letter-spacing="2">EVERY SUNDAY · 9AM &amp; 11AM</text>
+          <text x="640" y="336" font-family="'DM Mono',monospace" font-size="8" fill="#ffe599" opacity="0.28" letter-spacing="2">CORELINE</text>
+        </svg>
+        <div class="work-overlay"><span class="work-overlay-text">View full design →</span></div>
+      </div>
+      <div class="work-info">
+        <div class="work-cat">Church Poster · Print &amp; Digital · 2024</div>
+        <h3>Grace Covenant — Sunday Service</h3>
+      </div>
+    </div>
+
+    <!-- Gospel Concert -->
+    <div class="work-card wc2 reveal rd1" data-title="Songs of Glory — Gospel Concert" data-cat="Church Event Flyer · Social + Print">
+      <div class="work-visual">
+        <svg viewBox="0 0 420 350" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gc1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#100818"/><stop offset="100%" stop-color="#1e0a10"/></linearGradient>
+            <radialGradient id="gc2" cx="50%" cy="28%" r="50%"><stop offset="0%" stop-color="#ff6ef7" stop-opacity="0.22"/><stop offset="100%" stop-color="#ff6ef7" stop-opacity="0"/></radialGradient>
+          </defs>
+          <rect width="420" height="350" fill="url(#gc1)"/>
+          <rect width="420" height="350" fill="url(#gc2)"/>
+          <rect width="420" height="4" fill="#ff6ef7"/>
+          <rect x="24" y="24" width="108" height="22" rx="11" fill="#ff6ef7" fill-opacity="0.14" stroke="#ff6ef7" stroke-width="1" stroke-opacity="0.5"/>
+          <text x="36" y="39" font-family="'DM Mono',monospace" font-size="9" fill="#ff6ef7" letter-spacing="2">LIVE CONCERT</text>
+          <text x="24" y="100" font-family="'Syne',sans-serif" font-size="46" font-weight="800" fill="#ffffff" letter-spacing="-1">SONGS OF</text>
+          <text x="24" y="150" font-family="'Syne',sans-serif" font-size="46" font-weight="800" fill="#ff6ef7" letter-spacing="-1">GLORY</text>
+          <line x1="24" y1="164" x2="230" y2="164" stroke="#ff6ef7" stroke-opacity="0.3" stroke-width="1"/>
+          <text x="24" y="185" font-family="'Outfit',sans-serif" font-size="11" fill="#ffffff" opacity="0.45">A night of praise &amp; worship</text>
+          <text x="24" y="220" font-family="'DM Mono',monospace" font-size="8" fill="#ff6ef7" opacity="0.6" letter-spacing="3">FEATURING</text>
+          <text x="24" y="240" font-family="'Syne',sans-serif" font-size="14" font-weight="700" fill="#ffffff">Minister Praise · Worship Team</text>
+          <rect x="24" y="265" width="185" height="50" rx="4" fill="#ff6ef7" fill-opacity="0.1" stroke="#ff6ef7" stroke-width="1" stroke-opacity="0.3"/>
+          <text x="36" y="284" font-family="'DM Mono',monospace" font-size="8" fill="#ff6ef7" letter-spacing="3" opacity="0.7">DATE &amp; VENUE</text>
+          <text x="36" y="302" font-family="'Outfit',sans-serif" font-size="11" fill="#ffffff" opacity="0.8">SAT 22 JUNE · UHURU GARDENS</text>
+          <circle cx="345" cy="240" r="56" fill="none" stroke="#ff6ef7" stroke-opacity="0.1"/><circle cx="345" cy="240" r="36" fill="none" stroke="#ff6ef7" stroke-opacity="0.16"/><circle cx="345" cy="240" r="6" fill="#ff6ef7" opacity="0.6"/>
+        </svg>
+        <div class="work-overlay"><span class="work-overlay-text">View full design →</span></div>
+      </div>
+      <div class="work-info">
+        <div class="work-cat">Church Event Flyer · Social + Print</div>
+        <h3>Songs of Glory — Gospel Concert</h3>
+      </div>
+    </div>
+
+    <!-- Big Show -->
+    <div class="work-card wc3 reveal" data-title="Sound Storm — Concert Poster" data-cat="Big Show · Event Poster · 2024">
+      <div class="work-visual">
+        <svg viewBox="0 0 420 350" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="ss1" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#0a0a0a"/><stop offset="100%" stop-color="#1a0a00"/></linearGradient>
+            <radialGradient id="ss2" cx="50%" cy="62%" r="52%"><stop offset="0%" stop-color="#FF3B30" stop-opacity="0.32"/><stop offset="100%" stop-color="#FF3B30" stop-opacity="0"/></radialGradient>
+          </defs>
+          <rect width="420" height="350" fill="url(#ss1)"/>
+          <rect width="420" height="350" fill="url(#ss2)"/>
+          <text x="-5" y="230" font-family="'Syne',sans-serif" font-size="165" font-weight="800" fill="#FF3B30" fill-opacity="0.05" letter-spacing="-6">BIG</text>
+          <rect x="0" y="0" width="420" height="3" fill="#FF3B30"/>
+          <text x="24" y="36" font-family="'DM Mono',monospace" font-size="9" fill="#FF3B30" letter-spacing="4" opacity="0.8">THE BIG SHOW · NAIROBI 2024</text>
+          <text x="24" y="114" font-family="'Syne',sans-serif" font-size="64" font-weight="800" fill="#ffffff" letter-spacing="-2">SOUND</text>
+          <text x="24" y="180" font-family="'Syne',sans-serif" font-size="64" font-weight="800" fill="#FF3B30" letter-spacing="-2">STORM</text>
+          <line x1="24" y1="198" x2="396" y2="198" stroke="#FF3B30" stroke-opacity="0.18"/>
+          <line x1="24" y1="201" x2="175" y2="201" stroke="#FF3B30" stroke-opacity="0.7" stroke-width="2"/>
+          <text x="24" y="226" font-family="'DM Mono',monospace" font-size="8" fill="#FF3B30" letter-spacing="3" opacity="0.6">HEADLINERS</text>
+          <text x="24" y="246" font-family="'Syne',sans-serif" font-size="13" font-weight="700" fill="#ffffff" opacity="0.9">DJ BLAZE · MC VOLTAGE · NEON WAVE</text>
+          <rect x="24" y="268" width="220" height="36" rx="18" fill="#FF3B30"/>
+          <text x="56" y="291" font-family="'DM Mono',monospace" font-size="10" fill="#ffffff" letter-spacing="2">KASARANI · 7PM SHARP</text>
+          <circle cx="358" cy="175" r="52" fill="none" stroke="#FF3B30" stroke-opacity="0.12"/><circle cx="358" cy="175" r="30" fill="none" stroke="#FF3B30" stroke-opacity="0.2"/><circle cx="358" cy="175" r="5" fill="#FF3B30"/>
+        </svg>
+        <div class="work-overlay"><span class="work-overlay-text">View full design →</span></div>
+      </div>
+      <div class="work-info">
+        <div class="work-cat">Big Show · Event Poster · 2024</div>
+        <h3>Sound Storm — Concert Poster</h3>
+      </div>
+    </div>
+
+    <!-- Corporate Banner -->
+    <div class="work-card wc4 reveal rd1" data-title="Nova Tech Ltd — Corporate Identity" data-cat="Company Branding · Corporate Banner">
+      <div class="work-visual">
+        <svg viewBox="0 0 700 350" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="cb1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#050d1a"/><stop offset="100%" stop-color="#0a1628"/></linearGradient>
+          </defs>
+          <rect width="700" height="350" fill="url(#cb1)"/>
+          <rect x="0" y="0" width="310" height="350" fill="#2B2BE8" fill-opacity="0.04"/>
+          <rect x="0" y="0" width="4" height="350" fill="#2B2BE8" opacity="0.7"/>
+          <rect x="0" y="0" width="700" height="2" fill="#2B2BE8" opacity="0.3"/>
+          <rect x="48" y="52" width="32" height="4" rx="2" fill="#2B2BE8"/>
+          <rect x="48" y="62" width="22" height="4" rx="2" fill="#2B2BE8" opacity="0.6"/>
+          <rect x="48" y="72" width="28" height="4" rx="2" fill="#2B2BE8" opacity="0.35"/>
+          <text x="92" y="73" font-family="'Syne',sans-serif" font-size="15" font-weight="700" fill="#ffffff" letter-spacing="2">NOVA TECH LTD</text>
+          <line x1="48" y1="98" x2="290" y2="98" stroke="#2B2BE8" stroke-opacity="0.18"/>
+          <text x="48" y="162" font-family="'Syne',sans-serif" font-size="54" font-weight="800" fill="#ffffff" letter-spacing="-1">BUILDING</text>
+          <text x="48" y="220" font-family="'Syne',sans-serif" font-size="54" font-weight="800" fill="#2B2BE8" letter-spacing="-1">TOMORROW</text>
+          <text x="48" y="255" font-family="'Outfit',sans-serif" font-size="12" fill="#ffffff" opacity="0.4">Technology solutions for modern businesses.</text>
+          <rect x="48" y="275" width="148" height="38" fill="#2B2BE8"/>
+          <text x="74" y="299" font-family="'DM Mono',monospace" font-size="10" fill="#ffffff" letter-spacing="2">GET IN TOUCH</text>
+          <rect x="208" y="275" width="148" height="38" fill="none" stroke="#2B2BE8" stroke-width="1" stroke-opacity="0.5"/>
+          <text x="228" y="299" font-family="'DM Mono',monospace" font-size="10" fill="#2B2BE8" letter-spacing="2" opacity="0.7">OUR SERVICES</text>
+          <!-- Right decorative graphic — abstract building/grid lines -->
+          <g opacity="0.08" stroke="#2B2BE8" stroke-width="1">
+            <line x1="450" y1="40" x2="450" y2="290"/><line x1="500" y1="40" x2="500" y2="290"/>
+            <line x1="550" y1="40" x2="550" y2="290"/><line x1="600" y1="40" x2="600" y2="290"/>
+            <line x1="650" y1="40" x2="650" y2="290"/>
+            <line x1="430" y1="100" x2="680" y2="100"/><line x1="430" y1="150" x2="680" y2="150"/>
+            <line x1="430" y1="200" x2="680" y2="200"/><line x1="430" y1="250" x2="680" y2="250"/>
+          </g>
+          <!-- Stats row pinned to bottom -->
+          <rect x="0" y="300" width="700" height="50" fill="#2B2BE8" fill-opacity="0.18"/>
+          <rect x="0" y="300" width="700" height="1" fill="#2B2BE8" fill-opacity="0.5"/>
+          <text x="48" y="322" font-family="'DM Mono',monospace" font-size="8" fill="#ffffff" opacity="0.45" letter-spacing="2">TRACK RECORD</text>
+          <text x="48" y="342" font-family="'Syne',sans-serif" font-size="13" font-weight="800" fill="#2B2BE8">12+</text>
+          <text x="80" y="342" font-family="'DM Mono',monospace" font-size="9" fill="#ffffff" opacity="0.5" letter-spacing="1"> YRS</text>
+          <line x1="130" y1="315" x2="130" y2="345" stroke="#2B2BE8" stroke-opacity="0.35"/>
+          <text x="145" y="342" font-family="'Syne',sans-serif" font-size="13" font-weight="800" fill="#ffffff">300+</text>
+          <text x="192" y="342" font-family="'DM Mono',monospace" font-size="9" fill="#ffffff" opacity="0.5" letter-spacing="1"> CLIENTS</text>
+          <line x1="270" y1="315" x2="270" y2="345" stroke="#2B2BE8" stroke-opacity="0.35"/>
+          <text x="285" y="342" font-family="'DM Mono',monospace" font-size="9" fill="#ffffff" opacity="0.45" letter-spacing="1">NAIROBI · MOMBASA · REMOTE</text>
+          <text x="642" y="342" font-family="'DM Mono',monospace" font-size="8" fill="#2B2BE8" opacity="0.5" letter-spacing="2">CORELINE</text>
+        </svg>
+        <div class="work-overlay"><span class="work-overlay-text">View full design →</span></div>
+      </div>
+      <div class="work-info">
+        <div class="work-cat">Company Branding · Corporate Banner</div>
+        <h3>Nova Tech Ltd — Corporate Identity</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="stats-inner">
+    <div class="stat-item reveal"><div class="stat-num">50<span>+</span></div><div class="stat-label">Projects completed</div></div>
+    <div class="stat-item reveal rd1"><div class="stat-num">2<span>yr</span></div><div class="stat-label">Of experience</div></div>
+    <div class="stat-item reveal rd2"><div class="stat-num">40<span>+</span></div><div class="stat-label">Happy clients</div></div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<div class="process-section" id="process">
+  <canvas id="float-canvas"></canvas>
+  <div class="process-text reveal">
+    <div class="section-label">How we work</div>
+    <h2>Concept. Craft.<br>Deliver.</h2>
+    <p>Print · Digital · Social · Church · Events · Web</p>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-left reveal">
+    <div class="section-label">Let's talk</div>
+    <h2>Ready to build<br>something great?</h2>
+    <a href="mailto:iankanja2@gmail.com" class="big-email">iankanja2@gmail.com</a>
+    <div class="contact-details">
+      <div class="contact-detail"><strong>Phone</strong><span>+254 107 284 376</span></div>
+      <div class="contact-detail"><strong>Email</strong><span>iankanja2@gmail.com</span></div>
+      <div class="contact-detail"><strong>Location</strong><span>Nairobi, Kenya — Remote-first</span></div>
+      <div class="contact-detail"><strong>Hours</strong><span>Mon–Fri, 9am–6pm EAT</span></div>
+    </div>
+  </div>
+  <div class="contact-right reveal rd2">
+    <p>Whether you need a church flyer for Sunday, a concert poster for a big show, a company rebrand, or a full website — Coreline Designs brings your vision to life with precision and style.</p>
+    <br><br>
+    <p>We work fast, communicate clearly, and deliver designs that get results. Reach out and let's start creating.</p>
+    <br><br>
+    <a href="mailto:iankanja2@gmail.com" class="btn-primary">Send us a message</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Coreline Designs Company — Nairobi, Kenya &nbsp;|&nbsp; +254 107 284 376</p>
+  <ul class="footer-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="mailto:iankanja2@gmail.com">Email us</a></li>
+  </ul>
+</footer>
+
+
+<!-- LIGHTBOX MODAL -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-inner" id="lightbox-inner">
+    <button class="lightbox-close" id="lightbox-close">✕</button>
+    <div id="lightbox-svg"></div>
+    <div class="lightbox-label">
+      <span id="lightbox-cat"></span>
+      <strong id="lightbox-title"></strong>
+    </div>
+  </div>
+</div>
+
+<script>
+// CURSOR
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function tick(){cursor.style.left=mx+'px';cursor.style.top=my+'px';rx+=(mx-rx)*.14;ry+=(my-ry)*.14;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick)})();
+
+// NAV
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
+
+// REVEAL
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// SMOOTH SCROLL
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'})}
+  });
+});
+
+// LIGHTBOX
+(function(){
+  const lb=document.getElementById('lightbox');
+  const lbSvg=document.getElementById('lightbox-svg');
+  const lbCat=document.getElementById('lightbox-cat');
+  const lbTitle=document.getElementById('lightbox-title');
+  const lbClose=document.getElementById('lightbox-close');
+
+  document.querySelectorAll('.work-card').forEach(card=>{
+    const overlay=card.querySelector('.work-overlay');
+    if(!overlay) return;
+    overlay.addEventListener('click',()=>{
+      const svg=card.querySelector('.work-visual svg');
+      const title=card.getAttribute('data-title')||card.querySelector('.work-info h3').textContent;
+      const cat=card.getAttribute('data-cat')||card.querySelector('.work-cat').textContent;
+      if(!svg) return;
+      lbSvg.innerHTML='';
+      const clone=svg.cloneNode(true);
+      clone.style.display='block';
+      clone.style.width='100%';
+      clone.style.height='auto';
+      lbSvg.appendChild(clone);
+      lbCat.textContent=cat;
+      lbTitle.textContent=title;
+      lb.classList.add('open');
+      document.body.style.overflow='hidden';
+    });
+  });
+
+  function closeLb(){
+    lb.classList.remove('open');
+    document.body.style.overflow='';
+  }
+  lbClose.addEventListener('click',closeLb);
+  lb.addEventListener('click',e=>{ if(e.target===lb) closeLb(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLb(); });
+})();
+
+// ── PROCESS 3D (coreline motif, white on blue) ──
+(function(){
+  const canvas=document.getElementById('float-canvas');
+  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(60,1,.1,100);
+  camera.position.z=9;
+  function resize(){
+    const w=canvas.parentElement.clientWidth,h=canvas.parentElement.clientHeight;
+    renderer.setSize(w,h);renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+    camera.aspect=w/h;camera.updateProjectionMatrix();
+  }
+  resize();window.addEventListener('resize',resize);
+  const cMesh=new THREE.Mesh(new THREE.OctahedronGeometry(1.0,2),new THREE.MeshBasicMaterial({color:0xffffff,wireframe:true,opacity:.3,transparent:true}));
+  scene.add(cMesh);
+  const lGroup=new THREE.Group();
+  for(let i=0;i<40;i++){
+    const phi=Math.acos(-1+(2*i)/40),theta=Math.sqrt(40*Math.PI)*phi;
+    const dir=new THREE.Vector3(Math.sin(phi)*Math.cos(theta),Math.sin(phi)*Math.sin(theta),Math.cos(phi)).normalize();
+    const pts=[dir.clone().multiplyScalar(1.1),dir.clone().multiplyScalar(2+Math.random()*4)];
+    lGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:0xffffff,opacity:.06+Math.random()*.16,transparent:true})));
+  }
+  scene.add(lGroup);
+  [[2.2,Math.PI/2,0],[3.0,Math.PI/4,Math.PI/5],[4.2,0,Math.PI/3]].forEach(([r,rx,ry])=>{
+    const m=new THREE.Mesh(new THREE.TorusGeometry(r,.005,4,100),new THREE.MeshBasicMaterial({color:0xffffff,opacity:.18,transparent:true}));
+    m.rotation.x=rx;m.rotation.y=ry;scene.add(m);
+  });
+  let tx=0,ty=0,crx=0,cry=0;
+  document.addEventListener('mousemove',e=>{tx=(e.clientX/innerWidth-.5)*1.2;ty=(e.clientY/innerHeight-.5)*.8});
+  (function animate(){
+    requestAnimationFrame(animate);const t=Date.now()*.001;
+    cMesh.rotation.x=t*.3;cMesh.rotation.y=t*.45;
+    lGroup.rotation.y=t*.1;lGroup.rotation.x=t*.06;
+    crx+=(ty-crx)*.03;cry+=(tx-cry)*.03;
+    scene.rotation.x=crx*.28;scene.rotation.y=cry*.28;
+    renderer.render(scene,camera);
+  })();
+})();
+</script>
+</body>
+</html>
